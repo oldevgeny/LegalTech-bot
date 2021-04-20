@@ -127,7 +127,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Telegram-Bot settings
 
-TOKEN = '1770712939:AAH54YIPIouXipUDQFwXWngNbeZ08Z3wE8w'
+TOKEN = 'YOUR_TOKEN_WILL_BE_HERE'
 
 BASE_URL = 'https://api.telegram.org/bot'
 PROXY_URL = 'https://telegg.ru/orig/bot'
