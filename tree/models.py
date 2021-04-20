@@ -30,7 +30,7 @@ class Comment(models.Model):
     object_id = models.PositiveIntegerField()
     timestamp = models.DateTimeField(auto_now=True, verbose_name="Editing date")
     is_child = models.BooleanField(default=False)
-    is_question = models.BooleanField(default=False)
+    is_answer = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)

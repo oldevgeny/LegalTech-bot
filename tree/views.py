@@ -24,6 +24,7 @@ def create_comment(request):
         new_comment.object_id = 5
         new_comment.parent = None
         new_comment.is_child = False
+        new_comment.is_answer = False
         new_comment.save()
     return HttpResponseRedirect('/post-comments')
 
