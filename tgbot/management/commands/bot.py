@@ -128,11 +128,11 @@ class Command(BaseCommand):
         message_handler_count = CommandHandler('count', do_count)
         updater.dispatcher.add_handler(message_handler_count)
 
-        message_handler_echo = MessageHandler(Filters.text, do_echo)
-        updater.dispatcher.add_handler(message_handler_echo)
-
         message_handler_parentToChildren = MessageHandler(Filters.text, parentToChildren)
         updater.dispatcher.add_handler(message_handler_parentToChildren)
+
+        message_handler_echo = MessageHandler(Filters.text, do_echo)
+        updater.dispatcher.add_handler(message_handler_echo)
 
         # Run infinite processing of incoming messages
         updater.start_polling()

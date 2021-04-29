@@ -23,11 +23,18 @@
                   {{ comments|comments_filter }}
                   <hr>
                   <div class="col-md-12">
-                      <form action="{% url 'comment_create' %}" method="POST">
+                      <form action="{% url 'question_create' %}" method="POST">
                           {% csrf_token %}
                           {{ comment_form|crispy }}
-                          <input type="submit" class="btn btn-primary" value="Send"></input>
+                          <input type="submit" class="btn btn-primary" value="Add question"></input>
                       </form>
+                  <hr>
+                      <form action="{% url 'answer_create' %}" method="POST">
+                          {% csrf_token %}
+                          {{ comment_form|crispy }}
+                          <input type="submit" class="btn btn-primary" value="Add answer"></input>
+                      </form>
+                  <hr>
                   </div>
               </div>
               <div class="col-md-3">
@@ -41,15 +48,19 @@
 
           <script>
               $(document).ready(function(){
-                  $(".reply").on('click', function(){
-                      var parentId = $(this).attr('data-id')
-                      $("#form-"+parentId).fadeToggle();
-                  })
-                  $(".submit-reply").on('click', function(e){
+                $(".replyQ").on('click', function(){
+                    var parentId = $(this).attr('question-id')
+                    $("#question-form-"+parentId).fadeToggle();
+                })
+                $(".replyA").on('click', function(){
+                    var parentId = $(this).attr('answer-id')
+                    $("#answer-form-"+parentId).fadeToggle();
+                })
+                  $(".submit-reply-question").on('click', function(e){
                       e.preventDefault()
-                      var parentId = $(this).attr('data-submit-reply')
-                      var id = $(this).attr('data-id')
-                      var text = $("#form-"+id).find('textarea[name="comment-text"]').val();
+                      var parentId = $(this).attr('question-submit-reply')
+                      var id = $(this).attr('question-id')
+                      var text = $("#question-form-"+id).find('textarea[name="question-text"]').val();
                       function getCookie(name) {
                       let cookieValue = null;
                       if (document.cookie && document.cookie !== '') {
@@ -76,7 +87,44 @@
                       $.ajax({
                           method: "POST",
                           data: data,
-                          url: "{% url 'comment_child_create' %}",
+                          url: "{% url 'question_child_create' %}",
+                          success: function(data){
+                              window.location.replace('/post-comments')
+                           }
+                      })
+                  })
+                  $(".submit-reply-answer").on('click', function(e){
+                      e.preventDefault()
+                      var parentId = $(this).attr('answer-submit-reply')
+                      var id = $(this).attr('answer-id')
+                      var text = $("#answer-form-"+id).find('textarea[name="answer-text"]').val();
+                      function getCookie(name) {
+                      let cookieValue = null;
+                      if (document.cookie && document.cookie !== '') {
+                          const cookies = document.cookie.split(';');
+                          for (let i = 0; i < cookies.length; i++) {
+                              const cookie = cookies[i].trim();
+                              // Does this cookie string begin with the name we want?
+                              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                  break;
+                                  }
+                              }
+                          }
+                          return cookieValue;
+                      }
+                      const csrftoken = getCookie('csrftoken');
+                      data = {
+                          user: "{{ request.user.username }}",
+                          parentId: parentId,
+                          text: text,
+                          id: id,
+                          csrfmiddlewaretoken: csrftoken
+                      }
+                      $.ajax({
+                          method: "POST",
+                          data: data,
+                          url: "{% url 'answer_child_create' %}",
                           success: function(data){
                               window.location.replace('/post-comments')
                            }
