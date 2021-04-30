@@ -26,7 +26,7 @@ def create_question(request):
         new_comment.is_child = False
         new_comment.is_answer = False
         new_comment.save()
-    return HttpResponseRedirect('/post-comments')
+    return HttpResponseRedirect('/add-data')
 
 @transaction.atomic
 def create_child_question(request):
@@ -60,7 +60,7 @@ def create_answer(request):
         new_comment.is_child = False
         new_comment.is_answer = True
         new_comment.save()
-    return HttpResponseRedirect('/post-comments')
+    return HttpResponseRedirect('/add-data')
 
 @transaction.atomic
 def create_child_answer(request):
