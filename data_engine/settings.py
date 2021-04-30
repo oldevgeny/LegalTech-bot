@@ -138,3 +138,5 @@ TOKEN = '1770712939:AAH54YIPIouXipUDQFwXWngNbeZ08Z3wE8w'
 
 BASE_URL = 'https://api.telegram.org/bot'
 PROXY_URL = 'https://telegg.ru/orig/bot'
+
+FEEDBACK_USER_ID = '515627582'
