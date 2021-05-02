@@ -12,7 +12,7 @@ from telegram.ext import Updater
 from telegram.utils.request import Request
 
 from tgbot.models import Profile, Message
-from .commentsTreeCalculations import categories, children
+from tgbot.calculations import categories, children
 
 def log_errors(f):
 
@@ -41,7 +41,7 @@ def start(update: Update, context: CallbackContext):
         "Привет! Чем могу помочь?\nСписок категорий:\n" + categories()
     )
     update.message.reply_text(
-        "Введите число, соответствующее Вашей котегории."
+        "Введите число, соответствующее Вашей категории."
     )
 
 

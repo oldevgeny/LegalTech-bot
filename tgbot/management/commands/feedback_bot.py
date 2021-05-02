@@ -11,8 +11,10 @@ from telegram.ext import Filters
 from telegram.ext import Updater
 from telegram.utils.request import Request
 
-from tgbot.config import load_config
 from tgbot.utils import logger_factory
+from tgbot.config import load_config
+from tgbot.models import Profile, Message
+from tgbot.calculations import categories, children
 
 
 config = load_config()
@@ -24,10 +26,37 @@ debug_requests = logger_factory(logger=logger)
 
 @debug_requests
 def do_start(update: Update, context: CallbackContext):
-    update.message.reply_text(
-        text='Отправь мне текст, и я перешлю его автору канала',
+    chat_id = update.message.chat_id
+
+    p, _ = Profile.objects.get_or_create(
+        external_id=chat_id,
+        defaults={
+            'name': update.message.from_user.username,
+        }
     )
 
+    update.message.reply_text(
+        text='Выберите категорию',
+    )
+
+    update.message.reply_text(
+        "Привет! Чем могу помочь?\nСписок категорий:\n" + categories(),
+    )
+
+@debug_requests
+def parentToChildren(update: Update, context: CallbackContext):
+    chat_id = update.message.chat_id
+    text = update.message.text
+
+    p, _ = Profile.objects.get_or_create(
+        external_id=chat_id,
+        defaults={
+            'name': update.message.from_user.username,
+        }
+    )
+    update.message.reply_text(
+        F"Дети родителя {text}:\n" + children(text)
+    )
 @debug_requests
 def do_echo(update: Update, context: CallbackContext):
     chat_id = update.message.chat_id
@@ -95,9 +124,13 @@ class Command(BaseCommand):
 
         # Handlers
         start_handler = CommandHandler('start', do_start)
-        message_handler = MessageHandler(Filters.all, do_echo)
+        # message_handler = MessageHandler(Filters.all, do_echo)
         updater.dispatcher.add_handler(start_handler)
-        updater.dispatcher.add_handler(message_handler)
+        # updater.dispatcher.add_handler(message_handler)
+
+        message_handler_parentToChildren = MessageHandler(Filters.text, parentToChildren)
+        updater.dispatcher.add_handler(message_handler_parentToChildren)
+
 
         # Начать бесконечную обработку входящих сообщений
         updater.start_polling()
